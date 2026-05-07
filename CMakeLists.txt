@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20.0)
 
 project(EdoyunNet LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 # 如果编译器不支持 C++11，CMake 会在配置阶段直接报错
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 

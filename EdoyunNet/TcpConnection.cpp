@@ -1,5 +1,7 @@
 #include "TcpConnection.h"
 #include <unistd.h> // close 函数所需头文件
+#include <iostream>
+
 // 通过外部传入的sockfd创建Channel,并添加到TaskScheduler对象中进行事件监听和处理
 TcpConnection::TcpConnection(TaskScheduler *task_scheduler, int sockfd)
     : task_scheduler_(task_scheduler)
@@ -9,6 +11,19 @@ TcpConnection::TcpConnection(TaskScheduler *task_scheduler, int sockfd)
 
 {
     is_closed_ = false;
+
+    // 心跳？这就是心跳吗？还要再弄一个回声服务器
+    task_scheduler_->AddTimer([this](){
+        if (is_closed_) {
+            std::cout << "Connection closed, heartbeat stopped" << std::endl;
+            return false;  // 返回false让定时器停止
+        }
+
+        char buffer[] = "hello, i'm server";
+        this->Send(buffer, sizeof(buffer));
+        return true;
+    }, 1000);
+
     channel_->SetReadCallback([this]() { this->HandleRead(); });
     channel_->SetWriteCallback([this]() { this->HandleWrite(); });
     channel_->SetErrorCallback([this]() { this->HandleError(); });
@@ -25,6 +40,7 @@ TcpConnection::TcpConnection(TaskScheduler *task_scheduler, int sockfd)
 
 TcpConnection::~TcpConnection()
 {
+
     int fd = channel_->GetSockfd();
     if (fd > 0) {
         ::close(fd);
@@ -69,6 +85,13 @@ void TcpConnection::HandleRead()
         if (false == ret) {
             this->Disconnect();
         }
+    }
+
+    // 回声
+    std::string data;
+    uint32_t size = r_buffer_->ReadAll(data);
+    if (size) {
+        this->Send(data.data(), data.size());
     }
 }
 

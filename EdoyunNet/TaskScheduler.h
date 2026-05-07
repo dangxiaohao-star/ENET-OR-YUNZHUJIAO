@@ -1,3 +1,4 @@
+#pragma once
 #include <cstdint>
 #include "Timer.h"
 #include "Channel.h"

@@ -8,6 +8,7 @@ class Acceptor;
 
 class TcpServer
 {
+public:
     TcpServer(EventLoop* event_loop);
     virtual ~TcpServer();
 
