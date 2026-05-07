@@ -36,8 +36,8 @@ public:
 protected:
     friend class TcpServer;
 
-    virtual void HandleRead();      // 处理读事件, 将套接字readbuffer的数据 -->(拷贝) 到应用层缓冲区中
-    virtual void HandleWrite();     // 处理写事件, 将用户数据 -->(拷贝) 到发送（writebuffer？）缓冲区
+    virtual void HandleRead();      // 处理读事件, 内核 Socket 接收缓冲区 → r_buffer_（应用层读缓冲区）
+    virtual void HandleWrite();     // 处理写事件, w_buffer_（应用层写缓冲区）→ 内核 Socket 发送缓冲区
     virtual void HandleError();
     virtual void HandleClose();
 

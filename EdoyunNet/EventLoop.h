@@ -27,6 +27,6 @@ private:
     uint32_t num_threads_ = 1;
     std::atomic<uint32_t> index_ { 0 };
     std::vector<std::shared_ptr<TaskScheduler>> task_schedulers_;
-    std::vector<std::shared_ptr<std::thread>> threads_;
+    std::vector<std::shared_ptr<std::thread>> threads_;     // TODO：vector<thread>
     std::mutex mutex_;
 };
