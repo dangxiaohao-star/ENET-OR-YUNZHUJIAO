@@ -6,6 +6,7 @@ Acceptor::Acceptor(EventLoop *loop)
     : event_loop_(loop)
     , tcp_socket_(std::make_shared<TcpSocket>())
 {
+    std::cout << "[DEBUG] Acceptor create successful" << std::endl;
 }
 
 Acceptor::~Acceptor()

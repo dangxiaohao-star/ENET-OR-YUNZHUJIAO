@@ -68,7 +68,9 @@ void EventLoop::StartLoop()
     }
 
     for (uint32_t i = 0; i < num_threads_; ++i) {
-        std::shared_ptr<TaskScheduler> task_scheduler_ptr = std::make_shared<TaskScheduler>(i);
+        // 注意：一开始写成make_shared<TaskScheduler>，导致实例化基类TaskScheduler
+        // 而TaskScheduler的virtual bool HandleEvent 是直接return false的 (然而改完并没有完全修复)
+        std::shared_ptr<TaskScheduler> task_scheduler_ptr = std::make_shared<EpollTaskScheduler>(i);
         task_schedulers_.push_back(task_scheduler_ptr);
 
         threads_.push_back(std::make_shared<std::thread>(&TaskScheduler::Start, task_scheduler_ptr));

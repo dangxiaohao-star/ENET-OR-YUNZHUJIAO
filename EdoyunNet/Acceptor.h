@@ -20,7 +20,7 @@ public:
 private:
     void OnAccept();
 
-    private:
+private:
     EventLoop* event_loop_ = nullptr;    // 事件循环
     // shared_ptr类型默认初始化会自动为空，显式写出来更清晰
     std::shared_ptr<TcpSocket> tcp_socket_ = nullptr;    // TCP套接字

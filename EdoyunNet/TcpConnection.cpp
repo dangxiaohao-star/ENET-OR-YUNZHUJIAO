@@ -8,16 +8,17 @@ TcpConnection::TcpConnection(TaskScheduler *task_scheduler, int sockfd)
     , r_buffer_(new BufferReader(/* 缺省2048 */))
     , w_buffer_(new BufferWriter(500))
     , channel_(new Channel(sockfd))
+    , is_closed_(false)
 
 {
-    is_closed_ = false;
-
+    std::cout << "TcpConnection Created!" << std::endl;
     // 心跳？这就是心跳吗？还要再弄一个回声服务器
     task_scheduler_->AddTimer([this](){
         if (is_closed_) {
-            std::cout << "Connection closed, heartbeat stopped" << std::endl;
+            std::cout << "[DEBUG] Connection closed, heartbeat stopped" << std::endl;
             return false;  // 返回false让定时器停止
         }
+        else std::cout << "[DEBUG] heartbeat is prepared to start" << std::endl;
 
         char buffer[] = "hello, i'm server";
         this->Send(buffer, sizeof(buffer));
@@ -108,7 +109,7 @@ void TcpConnection::HandleWrite()
             return;
         }
         empty = w_buffer_->IsEmpty();
-    } while (0);
+    } while (!empty);
 
     if (empty) {
         if (channel_->IsWriting()) {

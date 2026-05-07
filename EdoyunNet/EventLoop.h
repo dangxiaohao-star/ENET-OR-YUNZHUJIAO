@@ -1,10 +1,9 @@
 #include "EpollTaskScheduler.h"
 #include <vector>
 
-
 class EventLoop{
 public:
-    explicit EventLoop(uint32_t num_threads = -1);
+    explicit EventLoop(uint32_t num_threads = 1);
     ~EventLoop();
 
     EventLoop(const EventLoop&) = delete;

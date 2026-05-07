@@ -6,16 +6,31 @@ TcpServer::TcpServer(EventLoop *event_loop)
     : event_loop_(event_loop)
     , acceptor_(new Acceptor(event_loop))
 {
+    std::cout << "[DEBUG] 我进入TcpServer的构造函数了?" << std::endl;
+    std::cout << "[DEBUG] TcpServer构造函数调用" << std::endl;
+    std::cout << "[DEBUG] EventLoop地址: " << event_loop_ << std::endl;
+    std::cout << "[DEBUG] Acceptor地址: " << acceptor_.get() << std::endl;
+
     acceptor_->SetNewConnectionCallback([this](int fd) {
+        std::cout << "[DEBUG] 新连接回调触发! fd=" << fd << std::endl;
+
         TcpConnection::TcpConnPtr conn = this->OnConnect(fd);
         if (conn) {
+            std::cout << "[SUCCESS] TCP连接创建成功 fd=" << fd << std::endl;
+            std::cout << "[DEBUG] 连接对象地址: " << conn.get() << std::endl;
+            std::cout << "[DEBUG] 引用计数: " << conn.use_count() << std::endl;
             this->AddConnection(fd, conn);
             conn->SetDisconnectCallback([this](TcpConnection::TcpConnPtr conn) {
                 int fd = conn->GetSocket();
                 this->RemoveConnection(fd);
             });
         }
+        else {
+            std::cout << "[ERROR] TCP连接创建失败 fd=" << fd << std::endl;
+            std::cout << "[DEBUG] 关闭socket fd=" << fd << std::endl;
+        }
     });
+    std::cout << "[DEBUG] TcpServer构造完成" << std::endl;
 }
 
 TcpServer::~TcpServer()
@@ -36,7 +51,7 @@ bool TcpServer::Start(std::string ip, uint16_t port)
         is_started_ = true;
     }
 
-    return false;
+    return true;
 }
 
 void TcpServer::Stop()
