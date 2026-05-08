@@ -9,7 +9,7 @@ int main() {
     EventLoop event_loop(cnt);
     TcpServer* tcp_server = new TcpServer(&event_loop);
     
-    tcp_server->Start("10.6.0.11", 8260);   // port取0628反过来
+    tcp_server->Start("0.0.0.0", 8260);   // port取0628反过来
     std::cout << "tcp server start !" << std::endl;
 
     getchar();

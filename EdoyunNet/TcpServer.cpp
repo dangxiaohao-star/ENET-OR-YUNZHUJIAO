@@ -6,7 +6,6 @@ TcpServer::TcpServer(EventLoop *event_loop)
     : event_loop_(event_loop)
     , acceptor_(new Acceptor(event_loop))
 {
-    std::cout << "[DEBUG] 我进入TcpServer的构造函数了?" << std::endl;
     std::cout << "[DEBUG] TcpServer构造函数调用" << std::endl;
     std::cout << "[DEBUG] EventLoop地址: " << event_loop_ << std::endl;
     std::cout << "[DEBUG] Acceptor地址: " << acceptor_.get() << std::endl;
